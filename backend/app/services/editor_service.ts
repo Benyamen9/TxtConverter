@@ -26,16 +26,14 @@ export default class EditorService {
       })
     })
 
-    const filePath = path.join(
-      'storage',
-      'exports',
-      book.slug,
-      `psalm_${chapter.chapterNumber}.txt`
-    )
+    const filePath = path.join('tmp', 'exports', book.slug, `psalm_${chapter.chapterNumber}.txt`)
 
     fs.mkdirSync(path.dirname(filePath), { recursive: true })
     fs.writeFileSync(filePath, output)
 
-    return filePath
+    return {
+      path: filePath,
+      message: 'Psalm exported successfully',
+    }
   }
 }

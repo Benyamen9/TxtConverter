@@ -11,7 +11,7 @@ export default class Segment extends BaseModel {
   declare verseId: number
 
   @column()
-  declare order: number
+  declare segmentNumber: number
 
   @column()
   declare text: string

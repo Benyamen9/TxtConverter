@@ -1,7 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Book from '#models/book'
 import Chapter from '#models/chapter'
-
 import EditorService from '#services/editor_service'
 
 export default class EditorsController {
@@ -10,7 +9,7 @@ export default class EditorsController {
 
     const chapter = await Chapter.query()
       .where('book_id', book.id)
-      .where('number', params.chapter)
+      .where('chapter_number', params.chapter)
       .preload('verses', (v) => {
         v.preload('segments', (s) => {
           s.preload('comments')

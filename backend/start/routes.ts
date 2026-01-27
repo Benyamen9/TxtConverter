@@ -8,9 +8,6 @@
 */
 
 import router from '@adonisjs/core/services/router'
+const EditorsController = () => import('#controllers/editors_controller')
 
-router.get('/', async () => {
-  return {
-    hello: 'world',
-  }
-})
+router.get('/export/:book/:chapter', [EditorsController, 'psalm'])
