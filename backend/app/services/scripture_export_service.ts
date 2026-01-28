@@ -1,12 +1,18 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import ScriptureRepository from '../repositories/scripture_repository.js'
+import { CommentType } from '#models/comment'
 
 function renderComment(comment: any, indent = 0): string {
   let output = ''
   const prefix = '  '.repeat(indent)
 
-  output += `${prefix}${comment.content}\n`
+  if (comment.type === CommentType.CITATION) {
+    output += `${prefix}Citation:\n`
+    output += `${prefix}${comment.content}\n`
+  } else {
+    output += `${prefix}${comment.content}\n`
+  }
 
   if (comment.segments && comment.segments.length > 0) {
     comment.segments.forEach((segment: any) => {
