@@ -12,7 +12,12 @@ export default class ScriptureRepository {
         v.orderBy('verse_number', 'asc')
         v.preload('segments', (s) => {
           s.orderBy('segment_number', 'asc')
-          s.preload('comments')
+          s.preload('comments', (c) => {
+            c.preload('segments', (cs) => {
+              cs.orderBy('segment_number', 'asc')
+              cs.preload('comments')
+            })
+          })
         })
       })
       .firstOrFail()

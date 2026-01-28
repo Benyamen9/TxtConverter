@@ -1,10 +1,15 @@
 import User from '#models/user'
+import { BaseSeeder } from '@adonisjs/lucid/seeders'
 
-export default class {
+export default class extends BaseSeeder {
   async run() {
-    await User.create({
-      email: 'editor@test.com',
-      password: 'secret',
-    })
+    await User.firstOrCreate(
+      { email: 'editor@test.com' },
+      {
+        email: 'editor@test.com',
+        password: 'secret',
+        fullName: 'Editor',
+      }
+    )
   }
 }

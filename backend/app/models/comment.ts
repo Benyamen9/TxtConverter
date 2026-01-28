@@ -1,12 +1,22 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { BaseModel, belongsTo, column, hasMany } from '@adonisjs/lucid/orm'
+import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
+import Segment from './segment.js'
+import CommentSegment from './comment_segment.js'
+import User from './user.js'
+
+export enum CommentType {
+  TRANSLATOR_NOTE = 'translator_note',
+  SAINT_COMMENTARY = 'saint_commentary',
+  CITATION = 'citation',
+}
 
 export default class Comment extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
   @column()
-  declare segmentId: number
+  declare userId: number
 
   @column()
   declare author: string
@@ -15,14 +25,35 @@ export default class Comment extends BaseModel {
   declare source: string | null
 
   @column()
-  declare type: 'translator_note' | 'saint_commentary'
+  declare type: CommentType
 
   @column()
   declare content: string
+
+  @column()
+  declare selectedText: string | null
+
+  @column()
+  declare segmentId: number | null
+
+  @column()
+  declare commentSegmentId: number | null
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+
+  @belongsTo(() => Segment)
+  declare segment: BelongsTo<typeof Segment>
+
+  @belongsTo(() => CommentSegment)
+  declare commentSegment: BelongsTo<typeof CommentSegment>
+
+  @belongsTo(() => User)
+  declare user: BelongsTo<typeof User>
+
+  @hasMany(() => CommentSegment)
+  declare segments: HasMany<typeof CommentSegment>
 }
