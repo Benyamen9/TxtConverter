@@ -1,10 +1,14 @@
-import Book from '#models/book'
-import Chapter from '#models/chapter'
 import fs from 'node:fs'
 import path from 'node:path'
+import ScriptureRepository from '../repositories/scripture_repository.js'
 
-export default class EditorService {
-  public static exportPsalm(book: Book, chapter: Chapter) {
+export default class ScriptureExportService {
+  public static async exportScriptureBySlug(bookSlug: string, chapterNumber: number) {
+    const { book, chapter } = await ScriptureRepository.getChapterByBookSlug(
+      bookSlug,
+      chapterNumber
+    )
+
     let output = ''
 
     output += `${book.title}\n`

@@ -8,6 +8,14 @@
 */
 
 import router from '@adonisjs/core/services/router'
-const EditorsController = () => import('#controllers/editors_controller')
+import { middleware } from './kernel.js'
+const ExportsController = () => import('#controllers/exports_controller')
+const AuthController = () => import('#controllers/auth_controller')
 
-router.get('/export/:book/:chapter', [EditorsController, 'psalm'])
+router.post('/login', [AuthController, 'login'])
+
+router
+  .group(() => {
+    router.get('/export/:book/:chapter', [ExportsController, 'scripture'])
+  })
+  .use(middleware.auth({ guards: ['api'] }))
