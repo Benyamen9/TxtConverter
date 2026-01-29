@@ -1,31 +1,29 @@
-import fs from 'node:fs'
-import path from 'node:path'
 import ScriptureRepository from '../repositories/scripture_repository.js'
-import { CommentType } from '#models/comment'
+import ExportRepository from '../repositories/export_repository.js'
+import { CommentType } from '../types/comment_type.js'
 
 function renderComment(comment: any, indent = 0): string {
-  let output = ''
   const prefix = '  '.repeat(indent)
+  let output = ''
 
   if (comment.type === CommentType.CITATION) {
     output += `${prefix}Citation:\n`
-    output += `${prefix}${comment.content}\n`
-  } else {
-    output += `${prefix}${comment.content}\n`
   }
 
-  if (comment.segments && comment.segments.length > 0) {
-    comment.segments.forEach((segment: any) => {
+  output += `${prefix}${comment.content}\n`
+
+  if (comment.segments?.length) {
+    for (const segment of comment.segments) {
       output += `${prefix}Part of comment:\n`
       output += `${prefix}${segment.text}\n`
       output += `${prefix}Comment:\n`
 
-      if (segment.comments && segment.comments.length > 0) {
-        segment.comments.forEach((childComment: any) => {
-          output += renderComment(childComment, indent + 1)
-        })
+      if (segment.comments?.length) {
+        for (const child of segment.comments) {
+          output += renderComment(child, indent + 1)
+        }
       }
-    })
+    }
   }
 
   return output
@@ -38,37 +36,29 @@ export default class ScriptureExportService {
       chapterNumber
     )
 
-    let output = ''
+    let output = `${book.title}\nPsalm ${chapter.chapterNumber}:\n\n`
 
-    output += `${book.title}\n`
-    output += `Psalm ${chapter.chapterNumber}:\n\n`
-
-    chapter.verses.forEach((verse) => {
+    for (const verse of chapter.verses) {
       output += `${verse.verseNumber} ${verse.text}\n\n`
 
-      verse.segments.forEach((segment) => {
-        output += `Part of sentence:\n`
-        output += `${segment.text}\n`
-        output += `Comment:\n`
+      for (const segment of verse.segments) {
+        output += `Part of sentence:\n${segment.text}\nComment:\n`
 
-        if (segment.comments && segment.comments.length > 0) {
-          segment.comments.forEach((comment) => {
+        if (segment.comments?.length) {
+          for (const comment of segment.comments) {
             output += renderComment(comment)
-          })
+          }
         }
 
-        output += `\n`
-      })
-    })
+        output += '\n'
+      }
+    }
 
-    const filePath = path.join('tmp', 'exports', book.slug, `psalm_${chapter.chapterNumber}.txt`)
-
-    fs.mkdirSync(path.dirname(filePath), { recursive: true })
-    fs.writeFileSync(filePath, output)
+    const filePath = ExportRepository.writeExportFile(book.slug, chapter.chapterNumber, output)
 
     return {
       path: filePath,
-      message: 'Psalm exported successfully',
+      message: 'Scripture exported successfully',
     }
   }
 }

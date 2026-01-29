@@ -4,12 +4,7 @@ import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 import Segment from './segment.js'
 import CommentSegment from './comment_segment.js'
 import User from './user.js'
-
-export enum CommentType {
-  TRANSLATOR_NOTE = 'translator_note',
-  SAINT_COMMENTARY = 'saint_commentary',
-  CITATION = 'citation',
-}
+import { CommentType } from '../types/comment_type.js'
 
 export default class Comment extends BaseModel {
   @column({ isPrimary: true })

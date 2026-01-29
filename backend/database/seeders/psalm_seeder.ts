@@ -9,7 +9,7 @@ import User from '#models/user'
 
 export default class extends BaseSeeder {
   public async run() {
-    const user = await User.findByOrFail('email', 'editor@test.com')
+    const user = await User.findByOrFail('email', 'translator@test.com')
 
     const book = await Book.firstOrCreate({
       slug: 'psalms',
@@ -56,7 +56,7 @@ export default class extends BaseSeeder {
     await Comment.firstOrCreate({
       commentSegmentId: commentSegment1.id,
       userId: user.id,
-      author: 'Editor',
+      author: 'Translator',
       type: CommentType.TRANSLATOR_NOTE,
       content: 'Kingdom here should be understood as eschatological, not political.',
     })
@@ -64,7 +64,7 @@ export default class extends BaseSeeder {
     await Comment.firstOrCreate({
       commentSegmentId: commentSegment2.id,
       userId: user.id,
-      author: 'Editor',
+      author: 'Translator',
       type: CommentType.TRANSLATOR_NOTE,
       content: 'This refers to the promise of resurrection and immortality.',
     })
@@ -72,7 +72,7 @@ export default class extends BaseSeeder {
     await Comment.firstOrCreate({
       commentSegmentId: commentSegment1.id,
       userId: user.id,
-      author: 'Editor',
+      author: 'Translator',
       type: CommentType.CITATION,
       content: 'Matthew 5:3-12',
     })
@@ -80,7 +80,7 @@ export default class extends BaseSeeder {
     await Comment.firstOrCreate({
       commentSegmentId: commentSegment1.id,
       userId: user.id,
-      author: 'Editor',
+      author: 'Translator',
       type: CommentType.CITATION,
       content: 'John 3:16',
     })
@@ -88,7 +88,7 @@ export default class extends BaseSeeder {
     await Comment.firstOrCreate({
       commentSegmentId: commentSegment2.id,
       userId: user.id,
-      author: 'Editor',
+      author: 'Translator',
       type: CommentType.CITATION,
       content: 'John 11:25',
     })

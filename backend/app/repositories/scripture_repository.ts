@@ -1,8 +1,16 @@
 import Book from '#models/book'
 import Chapter from '#models/chapter'
 
+export interface ScriptureChapterResult {
+  book: Book
+  chapter: Chapter
+}
+
 export default class ScriptureRepository {
-  public static async getChapterByBookSlug(bookSlug: string, chapterNumber: number) {
+  public static async getChapterByBookSlug(
+    bookSlug: string,
+    chapterNumber: number
+  ): Promise<ScriptureChapterResult> {
     const book = await Book.findByOrFail('slug', bookSlug)
 
     const chapter = await Chapter.query()
