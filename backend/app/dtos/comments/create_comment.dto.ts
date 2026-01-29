@@ -1,9 +1,11 @@
 import { CommentType } from '../../types/comment_type.js'
-import { CommentTarget } from '../../types/comment_target.js'
 
 export interface CreateCommentDTO {
-  target: CommentTarget
+  userId: number
+  author: string
+  source?: string | null
   type: CommentType
   content: string
-  selectedText?: string
+  segmentId?: number | null
+  parentCommentId?: number | null
 }

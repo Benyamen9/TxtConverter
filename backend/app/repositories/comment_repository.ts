@@ -1,27 +1,21 @@
 import Comment from '#models/comment'
-import type { CommentType } from '../types/comment_type.js'
-
-export interface CreateCommentDTO {
-  userId: number
-  content: string
-  type: CommentType
-  segmentId?: number | null
-  CommentSegmentId?: number | null
-}
+import type { CreateCommentDTO } from '../dtos/comments/create_comment.dto.js'
+import type { UpdateCommentDTO } from '../dtos/comments/update_comment.dto.js'
 
 export default class CommentRepository {
-  public static async create(dto: CreateCommentDTO): Promise<Comment> {
-    return Comment.create({
-      userId: dto.userId,
-      content: dto.content,
-      type: dto.type,
-      segmentId: dto.segmentId ?? null,
-      commentSegmentId: dto.CommentSegmentId ?? null,
-    })
+  static create(dto: CreateCommentDTO) {
+    return Comment.create(dto)
   }
 
-  public static async delete(commentId: number): Promise<void> {
-    const comment = await Comment.findOrFail(commentId)
+  static async update(id: number, dto: UpdateCommentDTO) {
+    const comment = await Comment.findOrFail(id)
+    comment.merge(dto)
+    await comment.save()
+    return comment
+  }
+
+  static async delete(id: number) {
+    const comment = await Comment.findOrFail(id)
     await comment.delete()
   }
 }

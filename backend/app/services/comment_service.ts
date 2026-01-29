@@ -1,12 +1,15 @@
 import CommentRepository from '../repositories/comment_repository.js'
-import type { CreateCommentDTO } from '../repositories/comment_repository.js'
 
 export default class CommentService {
-  public static async addComment(dto: CreateCommentDTO) {
+  static create(dto: any) {
     return CommentRepository.create(dto)
   }
 
-  public static async deleteComment(commentId: number) {
-    await CommentRepository.delete(commentId)
+  static update(id: number, dto: any) {
+    return CommentRepository.update(id, dto)
+  }
+
+  static delete(id: number) {
+    return CommentRepository.delete(id)
   }
 }

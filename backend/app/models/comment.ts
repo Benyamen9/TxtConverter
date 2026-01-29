@@ -5,6 +5,7 @@ import Segment from './segment.js'
 import CommentSegment from './comment_segment.js'
 import User from './user.js'
 import { CommentType } from '../types/comment_type.js'
+import { CommentParentType } from '../types/comment_parent_type.js'
 
 export default class Comment extends BaseModel {
   @column({ isPrimary: true })
@@ -29,10 +30,10 @@ export default class Comment extends BaseModel {
   declare selectedText: string | null
 
   @column()
-  declare segmentId: number | null
+  declare parentType: CommentParentType
 
   @column()
-  declare commentSegmentId: number | null
+  declare parentId: number
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
