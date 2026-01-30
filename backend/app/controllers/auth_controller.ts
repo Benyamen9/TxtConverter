@@ -1,16 +1,63 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import AuthService from '#services/auth_service'
+import Validator, { ValidationError } from '#validators/validator'
+import { inject } from '@adonisjs/core'
 
+@inject()
 export default class AuthController {
-  async login({ request, auth }: HttpContext) {
-    const user = await AuthService.login(request.only(['login', 'password']))
-    const token = await auth.use('api').createToken(user)
-    return { token: token.value!.release() }
+  constructor(
+    protected authService: AuthService,
+    protected validator: Validator
+  ) {}
+
+  async login({ request, auth, response }: HttpContext) {
+    try {
+      const { login, password } = request.all()
+
+      const validatedData = this.validator.validateLogin({ login, password })
+
+      const user = await this.authService.login(validatedData)
+      await auth.use('web').login(user)
+
+      return response.ok({ message: 'Connexion réussie', user })
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        return response.badRequest({ errors: error.errors })
+      }
+      return response.unauthorized({ message: 'Identifiants invalides' })
+    }
   }
 
-  async register({ request, auth }: HttpContext) {
-    const user = await AuthService.register(request.only(['email', 'password', 'fullName']))
-    const token = await auth.use('api').createToken(user)
-    return { token: token.value!.release() }
+  async register({ request, auth, response }: HttpContext) {
+    try {
+      const { email, password, fullName } = request.all()
+
+      const validatedData = this.validator.validateRegister({ email, password, fullName })
+
+      const user = await this.authService.register(validatedData)
+      await auth.use('web').login(user)
+
+      return response.created({ message: 'Compte créé avec succès', user })
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        return response.badRequest({ errors: error.errors })
+      }
+      if (error.message?.includes('déjà utilisé')) {
+        return response.conflict({ message: error.message })
+      }
+      return response.badRequest({
+        message: 'Erreur lors de la création du compte',
+      })
+    }
+  }
+
+  async logout({ auth, response }: HttpContext) {
+    await auth.use('web').logout()
+    return response.ok({ message: 'Déconnexion réussie' })
+  }
+
+  async getCurrentUser({ auth, response }: HttpContext) {
+    const user = auth.use('web').user
+    return response.ok({ user })
   }
 }

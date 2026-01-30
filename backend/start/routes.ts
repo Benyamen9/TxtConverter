@@ -21,17 +21,24 @@ router.post('/register', [AuthController, 'register'])
 
 router
   .group(() => {
+    // Logout route
+    router.post('/logout', [AuthController, 'logout'])
+    router.get('/user', [AuthController, 'getCurrentUser'])
+
     // Books routes
     router.get('/books', [BooksController, 'index'])
+
     // Segments routes
     router.post('/segments', [SegmentsController, 'store'])
     router.put('/segments/:id', [SegmentsController, 'update'])
     router.delete('/segments/:id', [SegmentsController, 'delete'])
+
     // Comments routes
     router.put('/comments/:id', [CommentsController, 'update'])
     router.post('/comments', [CommentsController, 'store'])
     router.delete('/comments/:id', [CommentsController, 'delete'])
+
     // Export routes
     router.get('/export/:book/:chapter', [ExportsController, 'scripture'])
   })
-  .use(middleware.auth({ guards: ['api'] }))
+  .use(middleware.auth({ guards: ['web'] }))
