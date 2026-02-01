@@ -1,22 +1,20 @@
-import AuthRepository from '../repositories/auth_repository.js'
 import type { LoginDTO } from '../dtos/auth/login.dto.js'
 import type { RegisterDTO } from '../dtos/auth/register.dto.js'
+import User from '#models/user'
 import { inject } from '@adonisjs/core'
 
 @inject()
 export default class AuthService {
-  constructor(protected authRepository: AuthRepository) {}
-
   async login(dto: LoginDTO) {
-    return await this.authRepository.login(dto)
+    return User.verifyCredentials(dto.login, dto.password)
   }
 
   async register(dto: RegisterDTO) {
-    const existingUser = await this.authRepository.findByEmail(dto.email)
+    const existingUser = await User.findBy('email', dto.email)
     if (existingUser) {
       throw new Error('Cet email est déjà utilisé')
     }
 
-    return await this.authRepository.register(dto)
+    return User.create(dto)
   }
 }
