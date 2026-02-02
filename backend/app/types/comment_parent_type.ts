@@ -1,5 +1,1 @@
-export enum CommentParentType {
-  SEGMENT = 'segment',
-  COMMENT = 'comment',
-  CITATION = 'citation',
-}
+export type CommentParentType = 'segment' | 'comment' | 'citation'

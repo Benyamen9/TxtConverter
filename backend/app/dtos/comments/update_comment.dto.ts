@@ -4,6 +4,6 @@ export interface UpdateCommentDTO {
   content?: string
   selectedText?: string | null
   source?: string | null
-  author?: string | null
+  author?: string
   type?: CommentType
 }

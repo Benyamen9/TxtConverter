@@ -1,29 +1,32 @@
-import SegmentRepository from '../repositories/segment_repository.js'
 import { CreateSegmentDTO } from '../dtos/segments/create_segment.dto.js'
 import { UpdateSegmentDTO } from '../dtos/segments/update_segment.dto.js'
+import Segment from '#models/segment'
 
 export default class SegmentService {
-  public static async create(dto: CreateSegmentDTO) {
-    if (!dto.text.trim()) {
-      throw new Error('Segment text cannot be empty')
-    }
-
-    return SegmentRepository.create(dto)
+  async create(dto: CreateSegmentDTO) {
+    return Segment.create(dto)
   }
 
-  public static async update(segmentId: number, dto: UpdateSegmentDTO) {
-    if (dto.text !== undefined && !dto.text.trim()) {
-      throw new Error('Segment text cannot be empty')
+  async update(segmentId: number, dto: UpdateSegmentDTO) {
+    const segment = await this.findById(segmentId)
+
+    if (dto.text !== undefined) {
+      segment.text = dto.text
+      segment.segmentNumber = dto.segmentNumber ?? segment.segmentNumber
     }
 
-    const segment = await SegmentRepository.findById(segmentId)
-    return SegmentRepository.update(segment, dto)
+    await segment.save()
+    return segment
   }
 
-  public static async delete(segmentId: number) {
-    const segment = await SegmentRepository.findById(segmentId)
-    await SegmentRepository.delete(segment)
+  async delete(segmentId: number) {
+    const segment = await this.findById(segmentId)
+    await segment.delete()
 
     return { success: true }
+  }
+
+  async findById(segmentId: number) {
+    return Segment.findOrFail(segmentId)
   }
 }

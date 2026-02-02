@@ -1,8 +1,12 @@
-import BookRepository from '../repositories/book_repository.js'
 import type { HttpContext } from '@adonisjs/core/http'
+import ScriptureRepository from '../repositories/scripture_repository.js'
+import { inject } from '@adonisjs/core'
 
+@inject()
 export default class BooksController {
-  index({}: HttpContext) {
-    return BookRepository.all()
+  constructor(protected scriptureRepo: ScriptureRepository) {}
+
+  async index({}: HttpContext) {
+    return await this.scriptureRepo.getAllBooksWithChapters()
   }
 }

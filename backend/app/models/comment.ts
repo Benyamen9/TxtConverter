@@ -4,8 +4,8 @@ import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 import Segment from './segment.js'
 import CommentSegment from './comment_segment.js'
 import User from './user.js'
-import { CommentType } from '../types/comment_type.js'
-import { CommentParentType } from '../types/comment_parent_type.js'
+import type { CommentType } from '../types/comment_type.js'
+import type { CommentParentType } from '../types/comment_parent_type.js'
 
 export default class Comment extends BaseModel {
   @column({ isPrimary: true })
@@ -52,4 +52,7 @@ export default class Comment extends BaseModel {
 
   @hasMany(() => CommentSegment)
   declare segments: HasMany<typeof CommentSegment>
+  static type: string
+  static content: any
+  static segments: boolean
 }

@@ -7,7 +7,7 @@ export interface ScriptureChapterResult {
 }
 
 export default class ScriptureRepository {
-  public static async getChapterByBookSlug(
+  async getChapterByBookSlug(
     bookSlug: string,
     chapterNumber: number
   ): Promise<ScriptureChapterResult> {
@@ -31,5 +31,13 @@ export default class ScriptureRepository {
       .firstOrFail()
 
     return { book, chapter }
+  }
+
+  async getAllBooksWithChapters(): Promise<Book[]> {
+    return Book.query()
+      .preload('chapters', (chapterQuery) => {
+        chapterQuery.orderBy('chapter_number', 'asc')
+      })
+      .orderBy('id', 'asc')
   }
 }

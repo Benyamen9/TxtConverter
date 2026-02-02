@@ -1,4 +1,4 @@
 export interface ExportScriptureDTO {
-  bookSlug: string
-  chapterNumber: number
+  book: string
+  chapter: number
 }

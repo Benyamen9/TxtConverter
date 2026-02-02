@@ -1,30 +1,36 @@
 import ScriptureRepository from '../repositories/scripture_repository.js'
-import { renderComment } from '../utils/comment_renderer.js'
-import { TextFormatter } from '../utils/text_formatter.js'
+import LayoutService from './layout_service.js'
+import { inject } from '@adonisjs/core'
 
+@inject()
 export default class ScriptureExportService {
-  public static async buildExport(bookSlug: string, chapterNumber: number): Promise<string> {
-    const { book, chapter } = await ScriptureRepository.getChapterByBookSlug(
+  constructor(
+    protected layoutService: LayoutService,
+    protected scriptureRepository: ScriptureRepository
+  ) {}
+
+  async buildExport(bookSlug: string, chapterNumber: number): Promise<string> {
+    const { book, chapter } = await this.scriptureRepository.getChapterByBookSlug(
       bookSlug,
       chapterNumber
     )
 
     let output = ''
 
-    output += TextFormatter.line(book.title)
-    output += TextFormatter.doubleLine(`Psalm ${chapter.chapterNumber}`)
+    output += this.layoutService.line(book.title)
+    output += this.layoutService.doubleLine(`Psalm ${chapter.chapterNumber}`)
 
     chapter.verses.forEach((verse) => {
-      output += TextFormatter.doubleLine(`${verse.verseNumber} ${verse.text}`)
+      output += this.layoutService.doubleLine(`${verse.verseNumber} ${verse.text}`)
 
       verse.segments.forEach((segment) => {
-        output += TextFormatter.label('Part of sentence')
-        output += TextFormatter.line(segment.text)
-        output += TextFormatter.label('Comment')
+        output += this.layoutService.label('Part of sentence')
+        output += this.layoutService.line(segment.text)
+        output += this.layoutService.label('Comment')
 
         if (segment.comments?.length > 0) {
           segment.comments.forEach((comment) => {
-            output += renderComment(comment)
+            output += this.layoutService.renderComment(comment)
           })
         }
 
