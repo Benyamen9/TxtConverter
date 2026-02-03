@@ -5,13 +5,7 @@ import { inject } from '@adonisjs/core'
 
 @inject()
 export default class AuthController {
-  constructor(
-    protected authService: AuthService,
-    protected authValidator: {
-      validateLogin: (typeof authLoginValidator)['validate']
-      validateRegister: (typeof authRegisterValidate)['validate']
-    }
-  ) {}
+  constructor(protected authService: AuthService) {}
 
   async login({ request, auth, response }: HttpContext) {
     const dto = await request.validateUsing(authLoginValidator)

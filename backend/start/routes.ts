@@ -29,13 +29,13 @@ router
     router.get('/books', [BooksController, 'index'])
 
     // Segments routes
-    router.post('/segments', [SegmentsController, 'store'])
+    router.post('/segments', [SegmentsController, 'create'])
     router.put('/segments/:id', [SegmentsController, 'update'])
     router.delete('/segments/:id', [SegmentsController, 'delete'])
 
     // Comments routes
     router.put('/comments/:id', [CommentsController, 'update'])
-    router.post('/comments', [CommentsController, 'store'])
+    router.post('/comments', [CommentsController, 'create'])
     router.delete('/comments/:id', [CommentsController, 'delete'])
 
     // Export routes

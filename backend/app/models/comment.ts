@@ -5,7 +5,6 @@ import Segment from './segment.js'
 import CommentSegment from './comment_segment.js'
 import User from './user.js'
 import type { CommentType } from '../types/comment_type.js'
-import type { CommentParentType } from '../types/comment_parent_type.js'
 
 export default class Comment extends BaseModel {
   @column({ isPrimary: true })
@@ -30,10 +29,10 @@ export default class Comment extends BaseModel {
   declare selectedText: string | null
 
   @column()
-  declare parentType: CommentParentType
+  declare segmentId: number | null
 
   @column()
-  declare parentId: number
+  declare parentCommentId: number | null
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -44,15 +43,19 @@ export default class Comment extends BaseModel {
   @belongsTo(() => Segment)
   declare segment: BelongsTo<typeof Segment>
 
-  @belongsTo(() => CommentSegment)
-  declare commentSegment: BelongsTo<typeof CommentSegment>
+  @belongsTo(() => Comment, {
+    foreignKey: 'parentCommentId',
+  })
+  declare parentComment: BelongsTo<typeof Comment>
 
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
 
   @hasMany(() => CommentSegment)
   declare segments: HasMany<typeof CommentSegment>
-  static type: string
-  static content: any
-  static segments: boolean
+
+  @hasMany(() => Comment, {
+    foreignKey: 'parentCommentId',
+  })
+  declare replies: HasMany<typeof Comment>
 }

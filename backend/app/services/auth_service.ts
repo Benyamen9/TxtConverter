@@ -4,7 +4,7 @@ import User from '#models/user'
 
 export default class AuthService {
   async login(dto: LoginDTO) {
-    return User.verifyCredentials(dto.login, dto.password)
+    return User.verifyCredentials(dto.email, dto.password)
   }
 
   async register(dto: RegisterDTO) {
