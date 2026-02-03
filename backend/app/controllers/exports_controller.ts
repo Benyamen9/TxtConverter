@@ -7,12 +7,7 @@ import { exportScriptureValidator } from '#validators/export_validator'
 
 @inject()
 export default class ExportsController {
-  constructor(
-    protected scriptureExportService: ScriptureExportService,
-    protected exportValidator: {
-      validate: (typeof exportScriptureValidator)['validate']
-    }
-  ) {}
+  constructor(protected scriptureExportService: ScriptureExportService) {}
 
   async scripture({ params }: HttpContext) {
     const validatedParams = (await params.validateUsing(

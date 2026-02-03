@@ -7,13 +7,7 @@ import { commentCreateValidator, commentUpdateValidator } from '#validators/comm
 
 @inject()
 export default class CommentsController {
-  constructor(
-    protected commentService: CommentService,
-    protected commentValidator: {
-      validateCreate: (typeof commentCreateValidator)['validate']
-      validateUpdate: (typeof commentUpdateValidator)['validate']
-    }
-  ) {}
+  constructor(protected commentService: CommentService) {}
 
   async create({ request, auth }: HttpContext) {
     const dto = await request.validateUsing(commentCreateValidator)
