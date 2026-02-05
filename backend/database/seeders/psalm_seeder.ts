@@ -253,7 +253,7 @@ export default class extends BaseSeeder {
     )
 
     // Segments du commentaire du saint
-    await CommentSegment.firstOrCreate(
+    const commentSegment1 = await CommentSegment.firstOrCreate(
       { commentId: saintComment.id, segmentNumber: 1 },
       {
         commentId: saintComment.id,
@@ -262,12 +262,114 @@ export default class extends BaseSeeder {
       }
     )
 
-    await CommentSegment.firstOrCreate(
+    const commentSegment2 = await CommentSegment.firstOrCreate(
       { commentId: saintComment.id, segmentNumber: 2 },
       {
         commentId: saintComment.id,
         segmentNumber: 2,
         text: 'and eternal life',
+      }
+    )
+
+    // Commentaires sur le premier segment du commentaire
+    await Comment.firstOrCreate(
+      {
+        commentSegmentId: commentSegment1.id,
+        userId: user.id,
+        type: 'translator_note',
+        content: 'Kingdom here should be understood as eschatological, not political.',
+      },
+      {
+        segmentId: null,
+        commentSegmentId: commentSegment1.id,
+        parentCommentId: null,
+        userId: user.id,
+        author: 'Translator',
+        type: 'translator_note',
+        content: 'Kingdom here should be understood as eschatological, not political.',
+        source: null,
+        selectedText: 'kingdom of heaven',
+      }
+    )
+
+    await Comment.firstOrCreate(
+      {
+        commentSegmentId: commentSegment1.id,
+        userId: user.id,
+        type: 'citation',
+        content: 'Matthew 5:3-12',
+      },
+      {
+        segmentId: null,
+        commentSegmentId: commentSegment1.id,
+        parentCommentId: null,
+        userId: user.id,
+        author: 'Translator',
+        type: 'citation',
+        content: 'Matthew 5:3-12',
+        source: 'Beatitudes',
+        selectedText: null,
+      }
+    )
+
+    await Comment.firstOrCreate(
+      {
+        commentSegmentId: commentSegment1.id,
+        userId: user.id,
+        type: 'citation',
+        content: 'John 3:16',
+      },
+      {
+        segmentId: null,
+        commentSegmentId: commentSegment1.id,
+        parentCommentId: null,
+        userId: user.id,
+        author: 'Translator',
+        type: 'citation',
+        content: 'John 3:16',
+        source: 'Gospel',
+        selectedText: null,
+      }
+    )
+
+    // Commentaires sur le deuxième segment du commentaire
+    await Comment.firstOrCreate(
+      {
+        commentSegmentId: commentSegment2.id,
+        userId: user.id,
+        type: 'translator_note',
+        content: 'This refers to the promise of resurrection and immortality.',
+      },
+      {
+        segmentId: null,
+        commentSegmentId: commentSegment2.id,
+        parentCommentId: null,
+        userId: user.id,
+        author: 'Translator',
+        type: 'translator_note',
+        content: 'This refers to the promise of resurrection and immortality.',
+        source: null,
+        selectedText: 'eternal life',
+      }
+    )
+
+    await Comment.firstOrCreate(
+      {
+        commentSegmentId: commentSegment2.id,
+        userId: user.id,
+        type: 'citation',
+        content: 'John 11:25',
+      },
+      {
+        segmentId: null,
+        commentSegmentId: commentSegment2.id,
+        parentCommentId: null,
+        userId: user.id,
+        author: 'Translator',
+        type: 'citation',
+        content: 'John 11:25',
+        source: 'Jesus and Lazarus',
+        selectedText: null,
       }
     )
 
@@ -482,6 +584,7 @@ export default class extends BaseSeeder {
     console.log('   - All comment types (saint_commentary, translator_note, citation)')
     console.log('   - Comments with/without source and selectedText')
     console.log('   - Nested comment threads (3 levels deep)')
+    console.log('   - Comment segments with their own comments')
     console.log(
       '👥 Created 2 users: translator@test.com, reviewer@test.com (password: password123)'
     )

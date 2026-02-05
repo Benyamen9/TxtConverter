@@ -12,7 +12,10 @@ export default class SegmentService {
 
     if (dto.text !== undefined) {
       segment.text = dto.text
-      segment.segmentNumber = dto.segmentNumber ?? segment.segmentNumber
+    }
+
+    if (dto.segmentNumber !== undefined) {
+      segment.segmentNumber = dto.segmentNumber
     }
 
     await segment.save()

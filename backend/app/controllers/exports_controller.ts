@@ -10,16 +10,13 @@ export default class ExportsController {
   constructor(protected scriptureExportService: ScriptureExportService) {}
 
   async scripture({ params }: HttpContext) {
-    const validatedParams = (await params.validateUsing(
-      exportScriptureValidator
-    )) as ExportScriptureDTO
+    const validatedParams = (await exportScriptureValidator.validate(params)) as ExportScriptureDTO
 
-    const content = await this.scriptureExportService.buildExport(
-      validatedParams.book,
-      Number(validatedParams.chapter)
-    )
+    const { book, chapter } = validatedParams
 
-    const filePath = `${validatedParams.book}/psalm_${validatedParams.chapter}.txt`
+    const content = await this.scriptureExportService.buildExport(book, Number(chapter))
+
+    const filePath = `${book}/psalm_${chapter}.txt`
     await drive.use('fs').put(filePath, content)
 
     return {

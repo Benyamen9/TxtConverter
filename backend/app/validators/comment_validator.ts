@@ -5,10 +5,11 @@ export const commentCreateValidator = vine.compile(
     userId: vine.number().min(1),
     author: vine.string().trim().minLength(1),
     source: vine.string().trim().optional().nullable(),
-    type: vine.enum(['translator_not', 'saint_commentary', 'citation'] as const),
+    type: vine.enum(['translator_note', 'saint_commentary', 'citation'] as const),
     parentCommentId: vine.number().min(1).optional().nullable(),
-    segmentId: vine.number().min(1),
+    segmentId: vine.number().min(1).nullable().optional(),
     content: vine.string().trim().minLength(1),
+    selectedText: vine.string().trim().optional().nullable(),
   })
 )
 

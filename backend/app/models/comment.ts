@@ -34,6 +34,9 @@ export default class Comment extends BaseModel {
   @column()
   declare parentCommentId: number | null
 
+  @column()
+  declare commentSegmentId: number | null
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
@@ -50,6 +53,9 @@ export default class Comment extends BaseModel {
 
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
+
+  @belongsTo(() => CommentSegment)
+  declare commentSegment: BelongsTo<typeof CommentSegment>
 
   @hasMany(() => CommentSegment)
   declare segments: HasMany<typeof CommentSegment>

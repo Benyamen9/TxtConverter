@@ -1,10 +1,6 @@
 import Book from '#models/book'
 import Chapter from '#models/chapter'
-
-export interface ScriptureChapterResult {
-  book: Book
-  chapter: Chapter
-}
+import { ScriptureChapterResult } from '../types/export_type.js'
 
 export default class ScriptureRepository {
   async getChapterByBookSlug(

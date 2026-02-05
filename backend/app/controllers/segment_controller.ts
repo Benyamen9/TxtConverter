@@ -1,6 +1,8 @@
 import SegmentService from '#services/segment_service'
 import type { HttpContext } from '@adonisjs/core/http'
+import { inject } from '@adonisjs/core'
 
+@inject()
 export default class SegmentsController {
   constructor(protected segmentService: SegmentService) {}
 
@@ -11,7 +13,7 @@ export default class SegmentsController {
   }
 
   async update({ params, request }: HttpContext) {
-    const dto = request.only(['text'])
+    const dto = request.only(['text', 'segmentNumber'])
 
     return this.segmentService.update(Number(params.id), dto)
   }

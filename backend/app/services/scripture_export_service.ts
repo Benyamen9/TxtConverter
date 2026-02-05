@@ -21,19 +21,14 @@ export default class ScriptureExportService {
     output += this.layoutService.doubleLine(`Psalm ${chapter.chapterNumber}`)
 
     chapter.verses.forEach((verse) => {
-      output += this.layoutService.doubleLine(`${verse.verseNumber} ${verse.text}`)
-
       verse.segments.forEach((segment) => {
-        output += this.layoutService.label('Part of sentence')
-        output += this.layoutService.line(segment.text)
-        output += this.layoutService.label('Comment')
-
         if (segment.comments?.length > 0) {
-          segment.comments.forEach((comment) => {
+          const topLevelComments = segment.comments.filter((comment) => !comment.commentSegmentId)
+
+          topLevelComments.forEach((comment) => {
             output += this.layoutService.renderComment(comment)
           })
         }
-
         output += '\n'
       })
     })
